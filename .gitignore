@@ -3,4 +3,4 @@
 
 .cursorindexingignore
 
-.specstory/** */
+.specstory
