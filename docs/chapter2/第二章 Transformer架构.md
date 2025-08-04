@@ -6,14 +6,14 @@
 
 随着 NLP 从统计机器学习向深度学习迈进，作为 NLP 核心问题的文本表示方法也逐渐从统计学习向深度学习迈进。正如我们在第一章所介绍的，文本表示从最初的通过统计学习模型进行计算的向量空间模型、语言模型，通过 Word2Vec 的单层神经网络进入到通过神经网络学习文本表示的时代。但是，从 计算机视觉（Computer Vision，CV）为起源发展起来的神经网络，其核心架构有三种：
 
-- 前馈神经网络（Feedforward Neural Network，FNN），即每一层的神经元都和上下两层的每一个神经元完全连接，如图2.1所示:
+- 全连接神经网络（Feedforward Neural Network，FNN），即每一层的神经元都和上下两层的每一个神经元完全连接，如图2.1所示:
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/datawhalechina/happy-llm/main/docs/images/2-figures/1-0.png" alt="图片描述" width="90%"/>
-  <p>图2.1 前馈神经网络</p>
+  <p>图2.1 全连接神经网络</p>
 </div>
 
-- 卷积神经网络（Convolutional Neural Network，CNN），即训练参数量远小于前馈神经网络的卷积层来进行特征提取和学习，如图2.2所示:
+- 卷积神经网络（Convolutional Neural Network，CNN），即训练参数量远小于全连接神经网络的卷积层来进行特征提取和学习，如图2.2所示:
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/datawhalechina/happy-llm/main/docs/images/2-figures/1-1.png" alt="图片描述" width="90%"/>
@@ -263,11 +263,11 @@ class MultiHeadAttention(nn.Module):
         # Wq, Wk, Wv 参数矩阵，每个参数矩阵为 n_embd x n_embd
         # 这里通过三个组合矩阵来代替了n个参数矩阵的组合，其逻辑在于矩阵内积再拼接其实等同于拼接矩阵再内积，
         # 不理解的读者可以自行模拟一下，每一个线性层其实相当于n个参数矩阵的拼接
-        self.wq = nn.Linear(args.dim, args.n_heads * self.head_dim, bias=False)
-        self.wk = nn.Linear(args.dim, args.n_heads * self.head_dim, bias=False)
-        self.wv = nn.Linear(args.dim, args.n_heads * self.head_dim, bias=False)
+        self.wq = nn.Linear(args.dim, self.n_local_heads * self.head_dim, bias=False)
+        self.wk = nn.Linear(args.dim, self.n_local_heads * self.head_dim, bias=False)
+        self.wv = nn.Linear(args.dim, self.n_local_heads * self.head_dim, bias=False)
         # 输出权重矩阵，维度为 dim x n_embd（head_dim = n_embeds / n_heads）
-        self.wo = nn.Linear(args.n_heads * self.head_dim, args.dim, bias=False)
+        self.wo = nn.Linear(self.n_local_heads * self.head_dim, args.dim, bias=False)
         # 注意力的 dropout
         self.attn_dropout = nn.Dropout(args.dropout)
         # 残差连接的 dropout
@@ -373,7 +373,6 @@ class MLP(nn.Module):
     def forward(self, x):
         # 前向传播函数
         # 首先，输入x通过第一层线性变换和RELU激活函数
-        # 然后，结果乘以输入x通过第三层线性变换的结果
         # 最后，通过第二层线性变换和dropout层
         return self.dropout(self.w2(F.relu(self.w1(x))))
     
@@ -424,7 +423,7 @@ $$
 class LayerNorm(nn.Module):
     ''' Layer Norm 层'''
     def __init__(self, features, eps=1e-6):
-	super(LayerNorm, self).__init__()
+	super().__init__()
     # 线性矩阵做映射
 	self.a_2 = nn.Parameter(torch.ones(features))
 	self.b_2 = nn.Parameter(torch.zeros(features))
@@ -479,7 +478,7 @@ class EncoderLayer(nn.Module):
         # Encoder 不需要掩码，传入 is_causal=False
         self.attention = MultiHeadAttention(args, is_causal=False)
         self.fnn_norm = LayerNorm(args.n_embd)
-        self.feed_forward = MLP(args)
+        self.feed_forward = MLP(args.dim, args.dim, args.dropout)
 
     def forward(self, x):
         # Layer Norm
@@ -529,7 +528,7 @@ class DecoderLayer(nn.Module):
         self.attention = MultiHeadAttention(args, is_causal=False)
         self.ffn_norm = LayerNorm(args.n_embd)
         # 第三个部分是 MLP
-        self.feed_forward = MLP(args)
+        self.feed_forward = MLP(args.dim, args.dim, args.dropout)
 
     def forward(self, x, enc_out):
         # Layer Norm
@@ -747,7 +746,7 @@ class PositionalEncoding(nn.Module):
     def __init__(self, args):
         super(PositionalEncoding, self).__init__()
         # Dropout 层
-        self.dropout = nn.Dropout(p=args.dropout)
+        # self.dropout = nn.Dropout(p=args.dropout)
 
         # block size 是序列的最大长度
         pe = torch.zeros(args.block_size, args.n_embd)
@@ -765,7 +764,7 @@ class PositionalEncoding(nn.Module):
     def forward(self, x):
         # 将位置编码加到 Embedding 结果上
         x = x + self.pe[:, : x.size(1)].requires_grad_(False)
-        return self.dropout(x)
+        return x
 ```
 
 ### 2.3.3 一个完整的 Transformer
@@ -814,7 +813,7 @@ class Transformer(nn.Module):
         n_params = sum(p.numel() for p in self.parameters())
         # 如果不统计 embedding 的参数，就减去
         if non_embedding:
-            n_params -= self.transformer.wpe.weight.numel()
+            n_params -= self.transformer.wte.weight.numel()
         return n_params
 
     '''初始化权重'''
