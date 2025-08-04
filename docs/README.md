@@ -4,15 +4,15 @@
 </div>
 
 <div align="center">
-  <img src="https://img.shields.io/github/stars/datawhalechina/happy-llm?style=for-the-badge&logo=github" alt="GitHub stars"/>
-  <img src="https://img.shields.io/github/forks/datawhalechina/happy-llm?style=for-the-badge&logo=github" alt="GitHub forks"/>
-  <img src="https://img.shields.io/badge/language-Chinese-brightgreen?style=for-the-badge" alt="Language"/>
+  <img src="https://img.shields.io/github/stars/datawhalechina/happy-llm?style=flat&logo=github" alt="GitHub stars"/>
+  <img src="https://img.shields.io/github/forks/datawhalechina/happy-llm?style=flat&logo=github" alt="GitHub forks"/>
+  <img src="https://img.shields.io/badge/language-Chinese-brightgreen?style=flat" alt="Language"/>
+  <a href="https://github.com/datawhalechina/happy-llm"><img src="https://img.shields.io/badge/GitHub-Project-blue?style=flat&logo=github" alt="GitHub Project"></a>
+  <a href="https://swanlab.cn/@kmno4/Happy-LLM/overview"><img src="https://raw.githubusercontent.com/SwanHubX/assets/main/badge1.svg" alt="SwanLab"></a>
 </div>
 
 <div align="center">
-
-[中文](./README.md) | [English](./README_en.md)
-
+  <a href="https://trendshift.io/repositories/14175" target="_blank"><img src="https://trendshift.io/api/badge/repositories/14175" alt="datawhalechina%2Fhappy-llm | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 </div>
 
 <div align="center">
@@ -42,14 +42,30 @@
 
 | 章节 | 关键内容 | 状态 |
 | --- | --- | --- |
-| [前言](./docs/README.md) | 本项目的缘起、背景及读者建议 | ✅ |
-| [第一章 NLP 基础概念](./docs/chapter1/第一章%20NLP基础概念.md) | 什么是 NLP、发展历程、任务分类、文本表示演进 | ✅ |
-| [第二章 Transformer 架构](./docs/chapter2/第二章%20Transformer架构.md) | 注意力机制、Encoder-Decoder、手把手搭建 Transformer | ✅ |
-| [第三章 预训练语言模型](./docs/chapter3/第三章%20预训练语言模型.md) | Encoder-only、Encoder-Decoder、Decoder-Only 模型对比 | ✅ |
-| [第四章 大语言模型](./docs/chapter4/第四章%20大语言模型.md) | LLM 定义、训练策略、涌现能力分析 | ✅ |
-| [第五章 动手搭建大模型](./docs/chapter5/第五章%20动手搭建大模型.md) | 实现 LLaMA2、训练 Tokenizer、预训练小型 LLM | ✅ |
-| [第六章 大模型训练实践](./docs/chapter6/第六章%20大模型训练流程实践.md) | 预训练、有监督微调、LoRA/QLoRA 高效微调 | ✅ |
-| [第七章 大模型应用](./docs/chapter7/第七章%20大模型应用.md) | 模型评测、RAG 检索增强、Agent 智能体 | ✅ |
+| [前言](./前言.md) | 本项目的缘起、背景及读者建议 | ✅ |
+| [第一章 NLP 基础概念](./chapter1/第一章%20NLP基础概念.md) | 什么是 NLP、发展历程、任务分类、文本表示演进 | ✅ |
+| [第二章 Transformer 架构](./chapter2/第二章%20Transformer架构.md) | 注意力机制、Encoder-Decoder、手把手搭建 Transformer | ✅ |
+| [第三章 预训练语言模型](./chapter3/第三章%20预训练语言模型.md) | Encoder-only、Encoder-Decoder、Decoder-Only 模型对比 | ✅ |
+| [第四章 大语言模型](./chapter4/第四章%20大语言模型.md) | LLM 定义、训练策略、涌现能力分析 | ✅ |
+| [第五章 动手搭建大模型](./chapter5/第五章%20动手搭建大模型.md) | 实现 LLaMA2、训练 Tokenizer、预训练小型 LLM | ✅ |
+| [第六章 大模型训练实践](./chapter6/第六章%20大模型训练流程实践.md) | 预训练、有监督微调、LoRA/QLoRA 高效微调 | 🚧 |
+| [第七章 大模型应用](./chapter7/第七章%20大模型应用.md) | 模型评测、RAG 检索增强、Agent 智能体 | ✅ |
+
+### 模型下载
+
+| 模型名称 | 下载地址 |
+| --- | --- |
+| Happy-LLM-Chapter5-Base-215M | [🤖 ModelScope](https://www.modelscope.cn/models/kmno4zx/happy-llm-215M-base) |
+| Happy-LLM-Chapter5-SFT-215M | [🤖 ModelScope](https://www.modelscope.cn/models/kmno4zx/happy-llm-215M-sft) |
+
+> *ModelScope 创空间体验地址：[🤖 创空间](https://www.modelscope.cn/studios/kmno4zx/happy_llm_215M_sft)*
+
+### PDF 版本下载
+
+&emsp;&emsp;***本 Happy-LLM PDF 教程完全开源免费。为防止各类营销号加水印后贩卖给大模型初学者，我们特地在 PDF 文件中预先添加了不影响阅读的 Datawhale 开源标志水印，敬请谅解～***
+
+> *Happy-LLM PDF : https://github.com/datawhalechina/happy-llm/releases/tag/PDF*  
+> *Happy-LLM PDF 国内下载地址 : https://www.datawhale.cn/learn/summary/179* 
 
 ## 💡 如何学习
 
@@ -90,7 +106,7 @@
 ## Star History
 
 <div align='center'>
-    <img src="./images/star-history-202566.png" alt="Datawhale" width="90%">
+    <img src="./images/star-history-2025710.png" alt="Datawhale" width="90%">
 </div>
 
 <div align="center">

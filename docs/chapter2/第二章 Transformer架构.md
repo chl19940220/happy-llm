@@ -6,24 +6,24 @@
 
 随着 NLP 从统计机器学习向深度学习迈进，作为 NLP 核心问题的文本表示方法也逐渐从统计学习向深度学习迈进。正如我们在第一章所介绍的，文本表示从最初的通过统计学习模型进行计算的向量空间模型、语言模型，通过 Word2Vec 的单层神经网络进入到通过神经网络学习文本表示的时代。但是，从 计算机视觉（Computer Vision，CV）为起源发展起来的神经网络，其核心架构有三种：
 
-- 前馈神经网络（Feedforward Neural Network，FNN），即每一层的神经元都和上下两层的每一个神经元完全连接，如图2.1所示:
+- 全连接神经网络（Feedforward Neural Network，FNN），即每一层的神经元都和上下两层的每一个神经元完全连接，如图2.1所示:
 
 <div align="center">
-  <img src="../images/2-figures/1-0.png" alt="图片描述" width="90%"/>
-  <p>图2.1 前馈神经网络</p>
+  <img src="https://raw.githubusercontent.com/datawhalechina/happy-llm/main/docs/images/2-figures/1-0.png" alt="图片描述" width="90%"/>
+  <p>图2.1 全连接神经网络</p>
 </div>
 
-- 卷积神经网络（Convolutional Neural Network，CNN），即训练参数量远小于前馈神经网络的卷积层来进行特征提取和学习，如图2.2所示:
+- 卷积神经网络（Convolutional Neural Network，CNN），即训练参数量远小于全连接神经网络的卷积层来进行特征提取和学习，如图2.2所示:
 
 <div align="center">
-  <img src="../images/2-figures/1-1.png" alt="图片描述" width="90%"/>
+  <img src="https://raw.githubusercontent.com/datawhalechina/happy-llm/main/docs/images/2-figures/1-1.png" alt="图片描述" width="90%"/>
   <p>图2.2 卷积神经网络</p>
 </div>
 
 - 循环神经网络（Recurrent Neural Network，RNN），能够使用历史信息作为输入、包含环和自重复的网络，如图2.3所示:
 
 <div align="center">
-  <img src="../images/2-figures/1-2.png" alt="图片描述" width="90%"/>
+  <img src="https://raw.githubusercontent.com/datawhalechina/happy-llm/main/docs/images/2-figures/1-2.png" alt="图片描述" width="90%"/>
   <p>图2.3 循环神经网络</p>
 </div>
 
@@ -87,7 +87,7 @@ $$
 
 根据词向量的定义，语义相似的两个词对应的词向量的点积应该大于0，而语义不相似的词向量点积应该小于0。
 
-那么，我们就可以用点积来计算词之间的相似度。假设我们的 Query 为“fruit”，对应的词向量为 $q$；我们的 Key 对应的词向量为 $k = [v_{apple} v_{banana} v_{chair}]$,则我们可以计算 Query 和每一个键的相似程度：
+那么，我们就可以用点积来计算词之间的相似度。假设我们的 Query 为“fruit”，对应的词向量为 $q$ ；我们的 Key 对应的词向量为 $k = [v_{apple} v_{banana} v_{chair}]$ ,则我们可以计算 Query 和每一个键的相似程度：
 
 $$
 x = qK^T
@@ -155,7 +155,7 @@ def attention(query, key, value, dropout=None):
 
 但是，在我们的实际应用中，我们往往只需要计算 Query 和 Key 之间的注意力结果，很少存在额外的真值 Value。也就是说，我们其实只需要拟合两个文本序列。​在经典的 注意力机制中，Q 往往来自于一个序列，K 与 V 来自于另一个序列，都通过参数矩阵计算得到，从而可以拟合这两个序列之间的关系。例如在 Transformer 的 Decoder 结构中，Q 来自于 Decoder 的输入，K 与 V 来自于 Encoder 的输出，从而拟合了编码信息与历史信息之间的关系，便于综合这两种信息实现未来的预测。
 
-​但在 Transformer 的 Encoder 结构中，使用的是 注意力机制的变种 —— 自注意力（self-attention，自注意力）机制。所谓自注意力，即是计算本身序列中每个元素都其他元素的注意力分布，即在计算过程中，Q、K、V 都由同一个输入通过不同的参数矩阵计算得到。在 Encoder 中，Q、K、V 分别是输入对参数矩阵 $W_q、W_k、W_v$ 做积得到，从而拟合输入语句中每一个 token 对其他所有 token 的关系。
+​但在 Transformer 的 Encoder 结构中，使用的是 注意力机制的变种 —— 自注意力（self-attention，自注意力）机制。所谓自注意力，即是计算本身序列中每个元素对其他元素的注意力分布，即在计算过程中，Q、K、V 都由同一个输入通过不同的参数矩阵计算得到。在 Encoder 中，Q、K、V 分别是输入对参数矩阵 $W_q、W_k、W_v$ 做积得到，从而拟合输入语句中每一个 token 对其他所有 token 的关系。
 
 通过自注意力机制，我们可以找到一段文本中每一个 token 与其他所有 token 的相关关系大小，从而建模文本之间的依赖关系。​在代码中的实现，self-attention 机制其实是通过给 Q、K、V 的输入传入同一个参数实现的：
 
@@ -187,7 +187,7 @@ attention(x, x, x)
     <BOS>    I   【MASK】 【MASK】【MASK】
     <BOS>    I     like  【MASK】【MASK】
     <BOS>    I     like    you  【MASK】
-    <BoS>    I     like    you   </EOS>
+    <BOS>    I     like    you   </EOS>
 
 在每一行输入中，模型仍然是只看到前面的 token，预测下一个 token。但是注意，上述输入不再是串行的过程，而可以一起并行地输入到模型中，模型只需要每一个样本根据未被遮蔽的 token 来预测下一个 token 即可，从而实现了并行的语言模型。
 
@@ -222,7 +222,7 @@ scores = F.softmax(scores.float(), dim=-1).type_as(xq)
 在原论文中，作者也通过实验证实，多头注意力计算中，每个不同的注意力头能够拟合语句中的不同信息，如图2.4所示：
 
 <div align="center">
-  <img src="../images/2-figures/1-3.jpeg" alt="图片描述" width="90%"/>
+  <img src="https://raw.githubusercontent.com/datawhalechina/happy-llm/main/docs/images/2-figures/1-3.jpeg" alt="图片描述" width="90%"/>
   <p>图2.4 多头注意力机制</p>
 </div>
 
@@ -252,7 +252,7 @@ class MultiHeadAttention(nn.Module):
         # args: 配置对象
         super().__init__()
         # 隐藏层维度必须是头数的整数倍，因为后面我们会将输入拆成头数个矩阵
-        assert args.n_embd % args.n_head == 0
+        assert args.dim % args.n_heads == 0
         # 模型并行处理大小，默认为1。
         model_parallel_size = 1
         # 本地计算头数，等于总头数除以模型并行处理大小。
@@ -263,11 +263,11 @@ class MultiHeadAttention(nn.Module):
         # Wq, Wk, Wv 参数矩阵，每个参数矩阵为 n_embd x n_embd
         # 这里通过三个组合矩阵来代替了n个参数矩阵的组合，其逻辑在于矩阵内积再拼接其实等同于拼接矩阵再内积，
         # 不理解的读者可以自行模拟一下，每一个线性层其实相当于n个参数矩阵的拼接
-        self.wq = nn.Linear(args.dim, args.n_heads * self.head_dim, bias=False)
-        self.wk = nn.Linear(args.dim, args.n_heads * self.head_dim, bias=False)
-        self.wv = nn.Linear(args.dim, args.n_heads * self.head_dim, bias=False)
-        # 输出权重矩阵，维度为 n_embd x n_embd（head_dim = n_embeds / n_heads）
-        self.wo = nn.Linear(args.n_heads * self.head_dim, args.dim, bias=False)
+        self.wq = nn.Linear(args.dim, self.n_local_heads * self.head_dim, bias=False)
+        self.wk = nn.Linear(args.dim, self.n_local_heads * self.head_dim, bias=False)
+        self.wv = nn.Linear(args.dim, self.n_local_heads * self.head_dim, bias=False)
+        # 输出权重矩阵，维度为 dim x n_embd（head_dim = n_embeds / n_heads）
+        self.wo = nn.Linear(self.n_local_heads * self.head_dim, args.dim, bias=False)
         # 注意力的 dropout
         self.attn_dropout = nn.Dropout(args.dropout)
         # 残差连接的 dropout
@@ -337,7 +337,7 @@ class MultiHeadAttention(nn.Module):
 
 ### 2.2.1 Seq2Seq 模型
 
-Seq2Seq，即序列到序列，是一种经典 NLP 任务。具体而言，是指模型输入的是一个自然语言序列 $input = (x_1, x_2, x_3...x_n)$，输出的是一个可能不等长的自然语言序列 $output = (y_1, y_2, y_3...y_m)$。事实上，Seq2Seq 是 NLP 最经典的任务，几乎所有的 NLP 任务都可以视为 Seq2Seq 任务。例如文本分类任务，可以视为输出长度为 1 的目标序列（如在上式中 $m$ = 1）；词性标注任务，可以视为输出与输入序列等长的目标序列（如在上式中 $m$ = $n$）。
+Seq2Seq，即序列到序列，是一种经典 NLP 任务。具体而言，是指模型输入的是一个自然语言序列 $input = (x_1, x_2, x_3...x_n)$ ，输出的是一个可能不等长的自然语言序列 $output = (y_1, y_2, y_3...y_m)$ 。事实上，Seq2Seq 是 NLP 最经典的任务，几乎所有的 NLP 任务都可以视为 Seq2Seq 任务。例如文本分类任务，可以视为输出长度为 1 的目标序列（如在上式中 $m$ = 1）；词性标注任务，可以视为输出与输入序列等长的目标序列（如在上式中 $m$ = $n$ ）。
 
 机器翻译任务即是一个经典的 Seq2Seq 任务，例如，我们的输入可能是“今天天气真好”，输出是“Today is a good day.”。Transformer 是一个经典的 Seq2Seq 模型，即模型的输入为文本序列，输出为另一个文本序列。事实上，Transformer 一开始正是应用在机器翻译任务上的。
 
@@ -346,7 +346,7 @@ Seq2Seq，即序列到序列，是一种经典 NLP 任务。具体而言，是�
 Transformer 中的 Encoder，就是用于上述的编码过程；Decoder 则用于上述的解码过程。Transformer 结构，如图2.5所示：
 
 <div align="center">
-  <img src="../images/2-figures/2-0.jpg" alt="图片描述" width="90%"/>
+  <img src="https://raw.githubusercontent.com/datawhalechina/happy-llm/main/docs/images/2-figures/2-0.jpg" alt="图片描述" width="90%"/>
   <p>图2.5 编码器-解码器结构</p>
 </div>
 
@@ -373,7 +373,6 @@ class MLP(nn.Module):
     def forward(self, x):
         # 前向传播函数
         # 首先，输入x通过第一层线性变换和RELU激活函数
-        # 然后，结果乘以输入x通过第三层线性变换的结果
         # 最后，通过第二层线性变换和dropout层
         return self.dropout(self.w2(F.relu(self.w1(x))))
     
@@ -424,7 +423,7 @@ $$
 class LayerNorm(nn.Module):
     ''' Layer Norm 层'''
     def __init__(self, features, eps=1e-6):
-	super(LayerNorm, self).__init__()
+	super().__init__()
     # 线性矩阵做映射
 	self.a_2 = nn.Parameter(torch.ones(features))
 	self.b_2 = nn.Parameter(torch.zeros(features))
@@ -479,13 +478,13 @@ class EncoderLayer(nn.Module):
         # Encoder 不需要掩码，传入 is_causal=False
         self.attention = MultiHeadAttention(args, is_causal=False)
         self.fnn_norm = LayerNorm(args.n_embd)
-        self.feed_forward = MLP(args)
+        self.feed_forward = MLP(args.dim, args.dim, args.dropout)
 
     def forward(self, x):
         # Layer Norm
-        x = self.attention_norm(x)
+        norm_x = self.attention_norm(x)
         # 自注意力
-        h = x + self.attention.forward(x, x, x)
+        h = x + self.attention.forward(norm_x, norm_x, norm_x)
         # 经过前馈神经网络
         out = h + self.feed_forward.forward(self.fnn_norm(h))
         return out
@@ -529,18 +528,18 @@ class DecoderLayer(nn.Module):
         self.attention = MultiHeadAttention(args, is_causal=False)
         self.ffn_norm = LayerNorm(args.n_embd)
         # 第三个部分是 MLP
-        self.feed_forward = MLP(args)
+        self.feed_forward = MLP(args.dim, args.dim, args.dropout)
 
     def forward(self, x, enc_out):
         # Layer Norm
-        x = self.attention_norm_1(x)
+        norm_x = self.attention_norm_1(x)
         # 掩码自注意力
-        x = x + self.mask_attention.forward(x, x, x)
+        x = x + self.mask_attention.forward(norm_x, norm_x, norm_x)
         # 多头注意力
-        x = self.attention_norm_2(x)
-        h = x + self.attention.forward(x, enc_out, enc_out)
+        norm_x = self.attention_norm_2(x)
+        h = x + self.attention.forward(norm_x, enc_out, enc_out)
         # 经过前馈神经网络
-        out = h + self.feed_forward.forward(self.fnn_norm(h))
+        out = h + self.feed_forward.forward(self.ffn_norm(h))
         return out
 ```
 
@@ -568,7 +567,7 @@ class Decoder(nn.Module):
 
 在前两章，我们分别深入剖析了 Attention 机制和 Transformer 的核心——Encoder、Decoder 结构，接下来，我们就可以基于上一章实现的组件，搭建起一个完整的 Transformer 模型。
 
-### 2.3.1 Embeddng 层
+### 2.3.1 Embedding 层
 
 正如我们在第一章所讲过的，在 NLP 任务中，我们往往需要将自然语言的输入转化为机器可以处理的向量。在深度学习中，承担这个任务的组件就是 Embedding 层。
 
@@ -590,7 +589,7 @@ output: 2
 因此，Embedding 层的输入往往是一个形状为 （batch_size，seq_len，1）的矩阵，第一个维度是一次批处理的数量，第二个维度是自然语言序列的长度，第三个维度则是 token 经过 tokenizer 转化成的 index 值。例如，对上述输入，Embedding 层的输入会是：
 
 ```
-[[0,1,2]]
+[[[0],[1],[2]]]
 ```
 
 其 batch_size 为1，seq_len 为3，转化出来的 index 如上。
@@ -618,7 +617,7 @@ $$
 
 ​上式中，pos 为 token 在句子中的位置，2i 和 2i+1 则是指示了 token 是奇数位置还是偶数位置，从上式中我们可以看出对于奇数位置的 token 和偶数位置的 token，Transformer 采用了不同的函数进行编码。
 
-我们以一个简单的例子来说明位置编码的计算过程：假如我们输入的是一个长度为 4 的句子"I like to code"，我们可以得到下面的词向量矩阵$\rm x$，其中每一行代表的就是一个词向量，$\rm x_0=[0.1,0.2,0.3,0.4]$对应的就是“I”的词向量，它的pos就是为0，以此类推，第二行代表的是“like”的词向量，它的pos就是1：
+我们以一个简单的例子来说明位置编码的计算过程：假如我们输入的是一个长度为 4 的句子"I like to code"，我们可以得到下面的词向量矩阵 $\rm x$ ，其中每一行代表的就是一个词向量， $\rm x_0=[0.1,0.2,0.3,0.4]$ 对应的就是“I”的词向量，它的pos就是为0，以此类推，第二行代表的是“like”的词向量，它的pos就是1：
 
 $$
 \rm x = \begin{bmatrix} 0.1 & 0.2 & 0.3 & 0.4 \\ 0.2 & 0.3 & 0.4 & 0.5 \\ 0.3 & 0.4 & 0.5 & 0.6 \\ 0.4 & 0.5 & 0.6 & 0.7 \end{bmatrix}
@@ -671,13 +670,13 @@ $$
 \begin{equation}\tilde{f}(\cdots,\boldsymbol{x}_m,\cdots,\boldsymbol{x}_n,\cdots)=f(\cdots,\boldsymbol{x}_m + \boldsymbol{p}_m,\cdots,\boldsymbol{x}_n + \boldsymbol{p}_n,\cdots)\end{equation}
 $$
 
-这里加上的 $p_m$，$p_n$ 就是位置编码。接下来我们将 $f(...,x_m+p_m,...,x_n+p_n)$ 在 m,n 两个位置上做泰勒展开：
+这里加上的 $p_m$， $p_n$ 就是位置编码。接下来我们将 $f(...,x_m+p_m,...,x_n+p_n)$ 在 m,n 两个位置上做泰勒展开：
 
 $$
 \begin{equation}\tilde{f}\approx f + \boldsymbol{p}_m^{\top} \frac{\partial f}{\partial \boldsymbol{x}_m} + \boldsymbol{p}_n^{\top} \frac{\partial f}{\partial \boldsymbol{x}_n} + \frac{1}{2}\boldsymbol{p}_m^{\top} \frac{\partial^2 f}{\partial \boldsymbol{x}_m^2}\boldsymbol{p}_m + \frac{1}{2}\boldsymbol{p}_n^{\top} \frac{\partial^2 f}{\partial \boldsymbol{x}_n^2}\boldsymbol{p}_n + \underbrace{\boldsymbol{p}_m^{\top} \frac{\partial^2 f}{\partial \boldsymbol{x}_m \partial \boldsymbol{x}_n}\boldsymbol{p}_n}_{\boldsymbol{p}_m^{\top} \boldsymbol{\mathcal{H}} \boldsymbol{p}_n}\end{equation}
 $$
 
-可以看到第1项与位置无关，2～5项仅依赖单一位置，第6项（f 分别对 m、n 求偏导）与两个位置有关，所以我们希望第六项（$p_m^THp_n$）表达相对位置信息，即求一个函数 g 使得:
+可以看到第1项与位置无关，2～5项仅依赖单一位置，第6项（f 分别对 m、n 求偏导）与两个位置有关，所以我们希望第六项（ $p_m^THp_n$ ）表达相对位置信息，即求一个函数 g 使得:
 
 $$
 p_m^THp_n = g(m-n)
@@ -732,7 +731,7 @@ $$
 上述​编码结果，如图2.6所示：
 
 <div align="center">
-  <img src="../images/2-figures/3-0.png" alt="图片描述" width="90%"/>
+  <img src="https://raw.githubusercontent.com/datawhalechina/happy-llm/main/docs/images/2-figures/3-0.png" alt="图片描述" width="90%"/>
   <p>图2.6 编码结果</p>
 </div>
 
@@ -747,7 +746,7 @@ class PositionalEncoding(nn.Module):
     def __init__(self, args):
         super(PositionalEncoding, self).__init__()
         # Dropout 层
-        self.dropout = nn.Dropout(p=args.dropout)
+        # self.dropout = nn.Dropout(p=args.dropout)
 
         # block size 是序列的最大长度
         pe = torch.zeros(args.block_size, args.n_embd)
@@ -765,7 +764,7 @@ class PositionalEncoding(nn.Module):
     def forward(self, x):
         # 将位置编码加到 Embedding 结果上
         x = x + self.pe[:, : x.size(1)].requires_grad_(False)
-        return self.dropout(x)
+        return x
 ```
 
 ### 2.3.3 一个完整的 Transformer
@@ -773,9 +772,11 @@ class PositionalEncoding(nn.Module):
 上述所有组件，再按照下图的 Tranfromer 结构拼接起来就是一个完整的 Transformer 模型了，如图2.7所示：
 
 <div align="center">
-  <img src="../images/2-figures/3-1.png" alt="图片描述" width="80%"/>
+  <img src="https://raw.githubusercontent.com/datawhalechina/happy-llm/main/docs/images/2-figures/3-1.png" alt="图片描述" width="80%"/>
   <p>图2.7 Transformer 模型结构</p>
 </div>
+
+但需要注意的是，上图是原论文《Attention is all you need》配图，LayerNorm 层放在了 Attention 层后面，也就是“Post-Norm”结构，但在其发布的源代码中，LayerNorm 层是放在 Attention 层前面的，也就是“Pre Norm”结构。考虑到目前 LLM 一般采用“Pre-Norm”结构（可以使 loss 更稳定），本文在实现时采用“Pre-Norm”结构。
 
 如图，经过 tokenizer 映射后的输出先经过 Embedding 层和 Positional Embedding 层编码，然后进入上一节讲过的 N 个 Encoder 和 N 个 Decoder（在 Transformer 原模型中，N 取为6），最后经过一个线性层和一个 Softmax 层就得到了最终输出。
 
@@ -812,7 +813,7 @@ class Transformer(nn.Module):
         n_params = sum(p.numel() for p in self.parameters())
         # 如果不统计 embedding 的参数，就减去
         if non_embedding:
-            n_params -= self.transformer.wpe.weight.numel()
+            n_params -= self.transformer.wte.weight.numel()
         return n_params
 
     '''初始化权重'''
